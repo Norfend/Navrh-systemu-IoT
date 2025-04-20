@@ -8,6 +8,9 @@ def setup_routes(app):
 
     @app.route("/dashboard", methods=["GET"])
     def dashboard():
+        if 'username' not in session:
+            return redirect(url_for('login'))
+
         latest = data_base.get_latest()
         last_15 = data_base.get_last_15()
 
