@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Dashboard</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+          crossorigin="anonymous">
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h1 class="text-center mb-5">🌡️ Temperature Dashboard</h1>
+    <div class="card shadow mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Latest Measurement</h5>
+      </div>
+      <div class="card-body row">
+        <div class="col-md-6">
+          <h2 class="display-4">{{ latest.temperature }} °C</h2>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p class="text-muted mb-1">Recorded at:</p>
+          <h4>{{ latest.timestamp }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow">
+      <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Last 15 Measurements</h5>
+        <form method="POST" action="{{ url_for('dashboard.delete_oldest') }}">
+          <button type="submit" class="btn btn-danger btn-sm">Delete Oldest</button>
+        </form>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-striped mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Temperature (°C)</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in measurements %}
+              <tr>
+                <td>{{ m.id }}</td>
+                <td>{{ m.temperature }}</td>
+                <td>{{ m.timestamp }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"
+></script>
+</body>
+</html>
