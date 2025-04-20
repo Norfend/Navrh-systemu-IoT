@@ -1,6 +1,4 @@
-from datetime import datetime
-
-class DataStore:
+class Data:
     def __init__(self):
         self.DATA = [
             {"id": 0, "temperature": 21, "timestamp": "2025-01-01 01:00:00"},
