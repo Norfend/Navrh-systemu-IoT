@@ -22,9 +22,9 @@
     <div class="card shadow">
       <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Last 15 Measurements</h5>
-        <form method="post" action="{{ url_for('delete_oldest') }}">
-          <button type="submit" class="btn btn-danger btn-sm">Delete Oldest</button>
-        </form>
+          <button id="delete-oldest" class="btn btn-danger btn-sm" data-url="{{ url_for('delete_oldest_controller') }}">
+              Delete Oldest
+          </button>
       </div>
       <div class="card-body p-0">
         <div class="table-responsive">
@@ -49,4 +49,5 @@
         </div>
       </div>
     </div>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}
