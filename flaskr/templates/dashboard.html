@@ -5,49 +5,66 @@
 {% block content %}
     <h1 class="text-center mb-5">🌡️ Temperature Dashboard</h1>
     <div class="card shadow mb-4">
-      <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Latest Measurement</h5>
-      </div>
-      <div class="card-body row">
-        <div class="col-md-6">
-          <h2 class="display-4">{{ latest.temperature }} °C</h2>
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Latest Measurement</h5>
         </div>
-        <div class="col-md-6 text-md-end">
-          <p class="text-muted mb-1">Recorded at:</p>
-          <h4>{{ latest.timestamp }}</h4>
+        <div class="card-body row">
+            {% if latest %}
+                <h2 class="display-4">{{ latest.temperature }} °C</h2>
+                <h4>{{ latest.timestamp }}</h4>
+            {% else %}
+                <h2 class="display-6 text-muted">No data available</h2>
+            {% endif %}
         </div>
-      </div>
     </div>
 
     <div class="card shadow">
-      <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Last 15 Measurements</h5>
-          <button id="delete-oldest" class="btn btn-danger btn-sm" data-url="{{ url_for('delete_oldest_controller') }}">
-              Delete Oldest
-          </button>
-      </div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-striped mb-0">
-            <thead class="table-light">
-              <tr>
-                <th>ID</th>
-                <th>Temperature (°C)</th>
-                <th>Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for m in measurements %}
-              <tr>
-                <td>{{ m.id }}</td>
-                <td>{{ m.temperature }}</td>
-                <td>{{ m.timestamp }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+        <div class="card shadow mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">📊 Temperature Graph</h5>
+            </div>
+            {% if graph_html %}
+                <div class="card shadow mt-4">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Temperature Graph</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="graph-container">
+                            {{ graph_html|safe }}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-center text-muted mt-4">No data available</p>
+            {% endif %}
         </div>
-      </div>
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Last Measurements</h5>
+            <div class="d-flex align-items-center gap-3">
+                <label for="row-count" class="mb-0">Show:</label>
+                <input type="number" id="row-count" min="1" max="100" value="15" class="form-control form-control-sm" style="width: 80px;">
+                <button id="update-table" class="btn btn-info btn-sm">Update Table</button>
+                <button id="delete-oldest" class="btn btn-danger btn-sm" data-url="{{ url_for('delete_oldest_controller') }}">
+                    Delete Oldest
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Temperature (°C)</th>
+                        <th>Timestamp</th>
+                    </tr>
+                    </thead>
+                    <tbody id="table">
+                        {% include 'partials/table.html' %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

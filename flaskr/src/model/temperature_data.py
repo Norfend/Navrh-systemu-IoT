@@ -54,10 +54,13 @@ class Temperature:
         ]
 
     def get_latest(self):
+        if not self.DATA:
+            return None
         return max(self.DATA, key=lambda x: x["timestamp"])
 
-    def get_last_15(self):
-        return sorted(self.DATA, key=lambda x: x["timestamp"], reverse=True)[:15]
+    def get_last_measurements(self, limit):
+        limit = int(limit)
+        return sorted(self.DATA, key=lambda x: x["timestamp"], reverse=True)[:min(limit, len(self.DATA))]
 
     def delete_oldest(self):
         if self.DATA:

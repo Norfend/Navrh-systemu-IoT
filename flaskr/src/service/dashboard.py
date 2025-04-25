@@ -1,4 +1,5 @@
-from flask import render_template, redirect, url_for, session, jsonify
+from flask import render_template, redirect, url_for, session, jsonify, request
+from service.graph import generate_temperature_graph
 
 
 def dashboard(data_base):
@@ -6,9 +7,23 @@ def dashboard(data_base):
         return redirect(url_for('login_controller'))
 
     latest = data_base.get_latest()
-    last_15 = data_base.get_last_15()
+    measurements = data_base.get_last_measurements(50)
+    if measurements:
+        graph_html = generate_temperature_graph(measurements)
+    else:
+        graph_html = None
 
-    return render_template("dashboard.html", latest=latest, measurements=last_15)
+    return render_template(
+        "dashboard.html",
+        latest=latest,
+        measurements=measurements,
+        graph_html=graph_html
+    )
+
+def update_table(data_base):
+    count = int(request.args.get('count', 15))
+    measurements = data_base.get_last_measurements(limit=count)
+    return render_template('partials/table.html', measurements=measurements)
 
 def delete_oldest(data_base):
     try:

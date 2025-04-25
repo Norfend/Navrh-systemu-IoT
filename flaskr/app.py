@@ -16,4 +16,4 @@ app.secret_key = os.getenv("SECRET_KEY")
 setup_routes(app, data_base, user_base)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
