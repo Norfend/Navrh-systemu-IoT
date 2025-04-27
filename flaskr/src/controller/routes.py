@@ -1,8 +1,13 @@
 from service.dashboard import dashboard, delete_oldest, update_table
 from service.user import login, logout, register
 
-def setup_routes(app, data_base, user_base):
+from model.temperature_data import Temperature
+from model.users_data import User
 
+data_base = Temperature()
+user_base = User()
+
+def all_routes(app):
     @app.route("/dashboard", methods=["GET"])
     def dashboard_controller():
         return dashboard(data_base)

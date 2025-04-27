@@ -7,7 +7,7 @@ def dashboard(data_base):
         return redirect(url_for('login_controller'))
 
     latest = data_base.get_latest()
-    measurements = data_base.get_last_measurements(50)
+    measurements = data_base.get_last_measurements(15)
     if measurements:
         graph_html = generate_temperature_graph(measurements)
     else:
