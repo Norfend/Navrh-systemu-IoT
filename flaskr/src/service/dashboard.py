@@ -1,13 +1,12 @@
-from flask import render_template, redirect, url_for, session, jsonify, request
+from flask import render_template, request, json
+
+from repository.temperature_repository import get_last_temperature, get_last_temperatures
 from service.graph import generate_temperature_graph
 
 
-def dashboard(data_base):
-    if 'username' not in session:
-        return redirect(url_for('login_controller'))
-
-    latest = data_base.get_latest()
-    measurements = data_base.get_last_measurements(15)
+def dashboard():
+    latest = json.loads(get_last_temperature()[0].get_data(as_text=True))
+    measurements = json.loads(get_last_temperatures(15)[0].get_data(as_text=True))
     if measurements:
         graph_html = generate_temperature_graph(measurements)
     else:
@@ -20,14 +19,7 @@ def dashboard(data_base):
         graph_html=graph_html
     )
 
-def update_table(data_base):
+def update_table():
     count = int(request.args.get('count', 15))
-    measurements = data_base.get_last_measurements(limit=count)
+    measurements = json.loads(get_last_temperatures(count)[0].get_data(as_text=True))
     return render_template('partials/table.html', measurements=measurements)
-
-def delete_oldest(data_base):
-    try:
-        data_base.delete_oldest()
-        return jsonify({'success': True, 'message': 'Oldest entry deleted successfully.'})
-    except Exception as e:
-        return jsonify({'success': False, 'message': str(e)}), 400

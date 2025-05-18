@@ -2,19 +2,18 @@ $(document).ready(function () {
     $('#delete-oldest').click(function (e) {
         e.preventDefault();
         const url = $(this).data('url');
+
         $.ajax({
             url: url,
             type: 'POST',
-            success: function (response) {
-                if (response.success) {
-                    updateTable();
-                } else {
-                    alert('Something went wrong.');
-                }
-            },
-            error: function () {
-                alert('Error deleting the oldest entry.');
-            }
+        })
+        .done(function (response) {
+            alert(response.message || 'Record deleted.');
+            updateTable();
+        })
+        .fail(function (xhr) {
+            const errorMsg = xhr.responseJSON?.error || 'Unknown error occurred.';
+            alert(errorMsg);
         });
     });
 

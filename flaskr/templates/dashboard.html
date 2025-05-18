@@ -8,12 +8,14 @@
         <div class="card-header bg-primary text-white">
             <h5 class="mb-0">Latest Measurement</h5>
         </div>
-        <div class="card-body row">
+        <div class="card-body">
             {% if latest %}
-                <h2 class="display-4">{{ latest.temperature }} °C</h2>
-                <h4>{{ latest.timestamp }}</h4>
+                <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                    <h2 class="display-6 mb-0">{{ latest.temperature }} °C</h2>
+                    <h4 class="mb-0 text-muted">{{ latest.timestamp }}</h4>
+                </div>
             {% else %}
-                <h2 class="display-6 text-muted">No data available</h2>
+                <h2 class="display-6 text-muted text-center">No data available</h2>
             {% endif %}
         </div>
     </div>
@@ -44,7 +46,7 @@
                 <label for="row-count" class="mb-0">Show:</label>
                 <input type="number" id="row-count" min="1" max="100" value="15" class="form-control form-control-sm" style="width: 80px;">
                 <button id="update-table" class="btn btn-info btn-sm">Update Table</button>
-                <button id="delete-oldest" class="btn btn-danger btn-sm" data-url="{{ url_for('delete_oldest_controller') }}">
+                <button id="delete-oldest" class="btn btn-danger btn-sm" data-url="{{ url_for('delete_last_temperature_controller') }}">
                     Delete Oldest
                 </button>
             </div>

@@ -2,7 +2,7 @@ import plotly.graph_objs as go
 import plotly.io as pio
 
 def generate_temperature_graph(data):
-    if not data:
+    if not all("timestamp" in entry for entry in data):
         return None
 
     timestamps = [entry["timestamp"] for entry in data]
