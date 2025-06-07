@@ -13,7 +13,9 @@ def temperature_routes(app):
             return jsonify({"error": "Temperature value is required"}), 400
 
         temperature_value = data.get('temperature')
-        return add_temperature(temperature_value)
+        measurement_time = data.get('measurement_time')
+        sending_time = data.get('sending_time')
+        return add_temperature(temperature_value, measurement_time, sending_time)
 
     @app.route("/api/get_last_temperature", methods=["GET"])
     def get_last_temperature_controller():

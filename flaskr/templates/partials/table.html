@@ -1,7 +1,8 @@
 {% for m in measurements %}
 <tr>
-    <td>{{ m.id }}</td>
-    <td>{{ m.temperature }}</td>
-    <td>{{ m.timestamp }}</td>
+    <td>{{ m.temperature }}°C</td>
+    <td>{{ m.measurement_time }}</td>
+    <td>{{ m.sending_time }}</td>
+    <td>{{ m.receiving_timestamp }}</td>
 </tr>
 {% endfor %}

@@ -12,7 +12,7 @@
             {% if latest %}
                 <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
                     <h2 class="display-6 mb-0">{{ latest.temperature }} °C</h2>
-                    <h4 class="mb-0 text-muted">{{ latest.timestamp }}</h4>
+                    <h4 class="mb-0 text-muted">{{ latest.receiving_timestamp }}</h4>
                 </div>
             {% else %}
                 <h2 class="display-6 text-muted text-center">No data available</h2>
@@ -27,9 +27,6 @@
             </div>
             {% if graph_html %}
                 <div class="card shadow mt-4">
-                    <div class="card-header bg-dark text-white">
-                        <h5 class="mb-0">Temperature Graph</h5>
-                    </div>
                     <div class="card-body">
                         <div id="graph-container">
                             {{ graph_html|safe }}
@@ -56,9 +53,10 @@
                 <table class="table table-striped mb-0">
                     <thead class="table-light">
                     <tr>
-                        <th>ID</th>
                         <th>Temperature (°C)</th>
-                        <th>Timestamp</th>
+                        <th>Measurement Time</th>
+                        <th>Sending Time</th>
+                        <th>Receiving Time</th>
                     </tr>
                     </thead>
                     <tbody id="table">

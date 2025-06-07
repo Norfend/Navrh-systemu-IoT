@@ -1,4 +1,4 @@
-import string
+from datetime import datetime
 
 from flask import jsonify
 
@@ -6,8 +6,12 @@ from model.Temperature import Temperature
 from utils.database import db
 
 
-def add_temperature(temperature_value):
-    new_temperature = Temperature(temperature=temperature_value)
+def add_temperature(temperature_value, measurement_time, sending_time):
+    measurement_date = datetime.strptime(measurement_time, "%Y-%m-%d %H:%M:%S")
+    sending_date = datetime.strptime(sending_time, "%Y-%m-%d %H:%M:%S")
+    new_temperature = Temperature(
+        temperature=temperature_value, measurement_time=measurement_date, sending_time=sending_date
+    )
 
     if not new_temperature:
         return jsonify({"error": "Temperature wasn't added"}), 500
@@ -23,9 +27,8 @@ def get_last_temperature():
         if last_record:
             return jsonify(
                 {
-                    'id': last_record.id,
                     'temperature': last_record.temperature,
-                    'timestamp': last_record.formatted_timestamp
+                    'receiving_timestamp': last_record.formatted_receiving_time
                 }), 200
         return jsonify({"error": "Temperature wasn't founded"}), 500
 
@@ -40,7 +43,7 @@ def get_temperature_by_id(temperature_id : int):
                 {
                     'id': found_temperature.id,
                     'temperature': found_temperature.temperature,
-                    'timestamp': found_temperature.formatted_timestamp
+                    'receiving_timestamp': found_temperature.formatted_receiving_time
                 }), 200
         return jsonify({"error": "Temperature wasn't founded"}), 400
 
@@ -49,13 +52,15 @@ def get_temperature_by_id(temperature_id : int):
 
 def get_last_temperatures(limit : int):
     try:
-        found_temperatures = db.session.query(Temperature).order_by(Temperature.timestamp.desc()).limit(limit).all()
+        found_temperatures = (db.session.query(Temperature)
+                              .order_by(Temperature.receiving_timestamp.desc()).limit(limit).all())
         if found_temperatures:
             serialized = [
                 {
-                    'id': temp.id,
                     'temperature': temp.temperature,
-                    'timestamp': temp.formatted_timestamp
+                    'measurement_time': temp.formatted_measurement_time,
+                    'sending_time': temp.formatted_sending_time,
+                    'receiving_timestamp': temp.formatted_receiving_time
                 }
                 for temp in found_temperatures
             ]
@@ -67,7 +72,7 @@ def get_last_temperatures(limit : int):
 
 def delete_last_temperature():
     try:
-        last_temperature = db.session.query(Temperature).order_by(Temperature.timestamp.desc()).first()
+        last_temperature = db.session.query(Temperature).order_by(Temperature.receiving_timestamp.desc()).first()
         if last_temperature:
             db.session.delete(last_temperature)
             db.session.commit()
@@ -98,14 +103,14 @@ def get_all_temperatures_by_sorting(sort_order: str = 'asc'):
 
         query = db.session.query(Temperature)
         if sort_order == 'asc':
-            temperatures = query.order_by(Temperature.timestamp.asc()).all()
+            temperatures = query.order_by(Temperature.receiving_timestamp.asc()).all()
         else:
-            temperatures = query.order_by(Temperature.timestamp.desc()).all()
+            temperatures = query.order_by(Temperature.receiving_timestamp.desc()).all()
 
         result = [{
             'id': temp.id,
             'temperature': temp.temperature,
-            'timestamp': temp.formatted_timestamp
+            'receiving_timestamp': temp.formatted_receiving_time
         } for temp in temperatures]
 
         return jsonify(result), 200
