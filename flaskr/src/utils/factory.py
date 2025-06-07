@@ -16,9 +16,9 @@ def create_app():
     static_dir = os.path.join(root_path, 'static')
 
     app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
-    app.secret_key = os.getenv("SECRET_KEY")
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('TRACK_MODIFICATIONS')
+    app.secret_key = os.getenv("SECRET_KEY", 'my_super_secret_key_123456')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///database.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('TRACK_MODIFICATIONS', 'false')
 
     db.init_app(app)
     login_manager.init_app(app)

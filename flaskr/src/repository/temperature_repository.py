@@ -91,7 +91,7 @@ def delete_temperature_by_id(temperature_id : int):
         db.session.rollback()
         raise e
 
-def get_all_temperatures_by_sorting(sort_order : string):
+def get_all_temperatures_by_sorting(sort_order: str = 'asc'):
     try:
         if sort_order not in ['asc', 'desc']:
             return jsonify({'error': 'Invalid sort parameter. Use "asc" or "desc".'}), 400

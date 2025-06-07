@@ -31,6 +31,7 @@ def register():
         new_user = User(login=username, password=hashed_password)
         try:
             db.session.add(new_user)
+            db.session.commit()
         except:
             db.session.rollback()
             flash("⚠ Username already exists, try another one.", "danger")
