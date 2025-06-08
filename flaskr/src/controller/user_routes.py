@@ -1,17 +1,18 @@
 from flask_login import login_required
 
-from repository.user_repository import login, logout, register
+from service.user_service import login_service, register_service, logout_service
+
 
 def user_routes(app):
     @app.route("/login", methods=["GET", "POST"])
     def login_controller():
-        return login()
+        return login_service()
 
     @app.route("/register", methods=["GET", "POST"])
     def register_controller():
-        return register()
+        return register_service()
 
     @login_required
     @app.route('/logout', methods=["POST"])
     def logout_controller():
-        return logout()
+        return logout_service()

@@ -1,6 +1,6 @@
 from flask_login import login_required
 
-from service.dashboard import dashboard, update_table
+from service.dashboard_service import dashboard, update_table
 
 
 def all_routes(app):

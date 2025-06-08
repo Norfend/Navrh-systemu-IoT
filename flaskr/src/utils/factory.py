@@ -1,13 +1,11 @@
 import os
-import paho.mqtt.client as mqtt
-import requests
 
 from flask import Flask, redirect, request, url_for, jsonify
 from flask_login import LoginManager
 from dotenv import load_dotenv
 
 from model.User import User
-from utils.configuration import setup_routes
+from utils.configuration import setup_routes, setup_mqtt_listener
 from utils.database import db
 
 login_manager = LoginManager()
@@ -28,42 +26,6 @@ def create_app():
     login_manager.login_view = "login_controller"
     login_manager.login_message_category = "danger"
 
-    mqtt_broker = 'localhost'
-    mqtt_port = 1883
-    mqtt_topic = 'sensor/temperature'
-
-    # MQTT client callbacks
-    def on_connect(client, userdata, flags, rc):
-        print(f"Connected with result code {rc}")
-        client.subscribe(mqtt_topic, qos=1)
-
-    def on_message(client, userdata, msg):
-        print(f"Received message on topic {msg.topic}")
-        try:
-            data = msg.payload.decode()
-            parts = {}
-            for part in data.split(", "):
-                key, value = part.split(": ", 1)
-                parts[key] = value
-
-            payload = {
-                "temperature": float(parts["Temperature"]),
-                "measurement_time": parts["Measurement Time"],
-                "sending_time": parts["Sending Time"]
-            }
-
-            response = requests.post("http://localhost:5000/api/add_temperature", json=payload)
-        except Exception as e:
-            print(f"Error: {e}")
-
-    # Set up MQTT client
-    mqtt_client = mqtt.Client()
-    mqtt_client.on_connect = on_connect
-    mqtt_client.on_message = on_message
-    mqtt_client.connect(mqtt_broker, mqtt_port, 60)
-
-    mqtt_client.loop_start()  # Start the loop to listen for messages
-
     @login_manager.user_loader
     def load_user(user_id):
         return db.session.get(User, int(user_id))
@@ -75,4 +37,5 @@ def create_app():
         return jsonify({'error': 'Unauthorized access'}), 401
 
     setup_routes(app, db)
+    setup_mqtt_listener()
     return app
