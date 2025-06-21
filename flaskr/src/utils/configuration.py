@@ -9,11 +9,11 @@ from controller.user_routes import user_routes
 mqtt_broker = 'localhost'
 mqtt_port = 1883
 
-def setup_routes(app, db):
+def setup_routes(app, limiter, db):
     with app.app_context():
         db.create_all()
 
-    all_routes(app)
+    all_routes(app, limiter)
     temperature_routes(app)
     user_routes(app)
     hardware_routes(app)
@@ -46,3 +46,12 @@ def setup_mqtt_listener():
     mqtt_client.connect(mqtt_broker, mqtt_port, 60)
 
     mqtt_client.loop_start()
+
+def check_mqtt(broker='localhost', port=1883, timeout=3):
+    client = mqtt.Client()
+    try:
+        client.connect(broker, port, keepalive=timeout)
+        client.disconnect()
+        return True
+    except Exception:
+        return False

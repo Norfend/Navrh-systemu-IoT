@@ -1,3 +1,5 @@
+import logging
+
 from flask_login import login_required
 from flask import request, jsonify
 
@@ -5,18 +7,12 @@ from service.temperature_service import (add_temperature_service, get_last_tempe
                                          get_temperature_by_id_service, delete_last_temperature_service,
                                          delete_temperature_by_id_service, get_all_temperatures_by_sorting_service)
 
+module_logger = logging.getLogger(__name__)
 
 def temperature_routes(app):
     @app.route("/api/add_temperature", methods=["POST"])
     def add_temperature_controller():
-        data = request.get_json()
-        if not data or 'temperature' not in data:
-            return jsonify({"error": "Temperature value is required"}), 400
-
-        temperature_value = data.get('temperature')
-        measurement_time = data.get('measurement_time')
-        sending_time = data.get('sending_time')
-        return add_temperature_service(temperature_value, measurement_time, sending_time)
+        return add_temperature_service(request.get_json())
 
     @app.route("/api/get_last_temperature", methods=["GET"])
     def get_last_temperature_controller():

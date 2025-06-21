@@ -2,7 +2,7 @@ from flask import request, jsonify
 
 from service.hardware_service import (turn_on_measurements_service, turn_off_measurements_service, turn_on_led_service,
                                       turn_off_led_service, set_measurements_interval_service,
-                                      get_hardware_status_service)
+                                      get_hardware_status_service, get_health_service)
 
 
 def hardware_routes(app):
@@ -33,3 +33,7 @@ def hardware_routes(app):
     @app.route("/api/status", methods=["GET"])
     def get_hardware_status_controller():
         return get_hardware_status_service()
+
+    @app.route("/api/health", methods=["GET"])
+    def get_health_controller():
+        return get_health_service()

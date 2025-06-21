@@ -1,2 +1,3 @@
 /flaskr/.env
 /flaskr/src/instance/
+/flaskr/logs/
