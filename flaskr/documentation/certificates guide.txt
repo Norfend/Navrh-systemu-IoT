@@ -1,0 +1,19 @@
+1. Příprava souboru
+    Ujistěte se, že máte certifikát ve formátu .crt (např. server.crt).
+2. Otevření Správce certifikátů (MMC)
+    Stiskněte klávesy Win + R
+    Do pole Otevřít napište mmc a stiskněte Enter.
+    V hlavním okně klikněte vlevo nahoře na Soubor → Přidat/odebrat modul snap-in….
+    Ze seznamu modulů vyberte Certifikáty a klikněte na Přidat.
+    Zvolte Účet počítače → Další → Dokončit → OK.
+3. Navigace k úložišti důvěryhodných kořenových CA
+    V levém panelu rozklikněte Certifikáty (místní počítač).
+    Dále rozbalte Důvěryhodné kořenové certifikační autority a klikněte na Certifikáty.
+4. Import certifikátu
+    Pravým tlačítkem klikněte na „Certifikáty“ pod „Důvěryhodné kořenové certifikační autority“.
+    Vyberte Všechny úkoly → Import…
+    V průvodci klikněte na Procházet, najděte váš server.crt, klikněte Otevřít.
+    Potvrďte tlačítkem Další až do konce a zvolte Dokončit.
+    Mělo by se zobrazit hlášení „Import úspěšný“.
+5. Restart prohlížeče
+    Zavřete všechny otevřené instance prohlížeče (Chrome, Edge, Firefox) a znovu jej spusťte.
